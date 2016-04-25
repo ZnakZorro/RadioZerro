@@ -10,7 +10,7 @@ div#natopie   {min-height:7em;background:#404A51;border-bottom: 2px solid #888;}
 div#alarm_div {background:#404A51;padding-bottom: 2em;}
 div#alarm_div button {padding: 0.5em 0.2em; min-width:6em;}
 div#alarm_div button#btn-update {min-width:2em;}
-input#alarmval {width:4em;}
+input#alarmval,input#AlarmTime {width:4em;}
 
 .active{color:#ffa;}
 /*
