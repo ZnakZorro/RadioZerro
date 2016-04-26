@@ -5,12 +5,14 @@ body,button {
 }
 body {background:black; color: white; margin:0; padding:0;}
 div {padding:0.75em;}
+div#nono  {font-family:monospace; font-size:0.9em; color:#ddd;}
 div#infosy  {min-height:3em;}
 div#natopie   {min-height:7em;background:#404A51;border-bottom: 2px solid #888;}
 div#alarm_div {background:#404A51;padding-bottom: 2em;}
 div#alarm_div button {padding: 0.5em 0.2em; min-width:6em;}
 div#alarm_div button#btn-update {min-width:2em;}
-input#alarmval,input#AlarmTime {width:4em;}
+input#alarmval {width:3em;}
+input#AlarmTime {width:6em;}
 
 .active{color:#ffa;}
 /*

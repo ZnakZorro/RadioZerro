@@ -33,7 +33,8 @@ function testIP(u,url){
 function ustawVolume(ten){
 	var volume = parseInt(ten.value);
 	ax(radioUrl+'volume/'+volume);
-	$('volume_info').innerHTML=" ["+volume+"%] ";
+	$('volume_info').innerHTML = " ["+volume+"%] ";
+	//$('volume_set').innerHTML  = " ["+volume+"%] ";
 }
 
 
@@ -48,8 +49,10 @@ function ax(u){
 	fetch(u,{cache:"no-cache"}).then(function(response) {
 		return response.json();
 	}).then(function(j) {
+		//console.log(j);
 		if (j.length) {stations=j; return;}
 		$('nono').innerHTML=JSON.stringify(j);
+		//console.log(JSON.stringify(j))
 		if (j.radio) {
 			ustawActive();
 			var title=$('btn'+j.radio).innerHTML;
@@ -59,7 +62,10 @@ function ax(u){
 			$('radio_nr').innerHTML = j.radio;
 		}
 		if (j.html)  $('info').innerHTML = (j.html);
-		if (j.volume) {$('VolumeSlider').value = j.volume; $('volume_info').innerHTML=j.volume+"% ";}
+		if (j.volume) {
+			$('VolumeSlider').value = j.volume; 
+			$('volume_info').innerHTML='('+j.volume+"%) ";
+		}
 		if (j.time) $('zegar').innerHTML = (new Date(j.time)).toLocaleString();				
 	}).catch(function(err) {
 		console.log(err);
@@ -82,16 +88,7 @@ function Klawisze(region,event,klasa) {
 	else if (event=='pukniety') this.event = this.pukniety;
 	else this.event = event;
 }
-/*
-Klawisze.prototype.klikniety = function(ten) {
-	//console.log('klikniety',this)
-	//console.log(ten)
-}
-Klawisze.prototype.pukniety = function(ten) {
-	//console.log('pukniety',this)
-	//console.log(ten)
-}
-*/
+
 Klawisze.prototype.wstaw = function(title,id) {
 	var newButton = document.createElement('button');
 		newButton.id = 'btn'+id;
@@ -105,8 +102,8 @@ Klawisze.prototype.wstaw = function(title,id) {
 
 var setStation=function(){
 	var id= this.dataset.id;
-	//console.log('setStation',this,id);
-	//ax('json.json');
+	$('title').InnerHTML='';
+	$('info').InnerHTML='';
 	ax(radioUrl+'radio/'+id);//+'/html');
 	setTimeout(function(){ax(radioUrl+'info/');},1000)
 	setTimeout(function(){ax(radioUrl+'info/');},3000)
@@ -193,12 +190,16 @@ window.addEventListener("resize", updateScreen, false);
 window.addEventListener("orientationchange",updateScreen, false);
 
 
-   function onLoad() {
-        document.addEventListener("deviceready", onDeviceReady, false);
+function onLoad() {
+	//console.log(window.location.href.split('/'));
+	$('nonono').innerHTML=window.location.href;
+	var dysk = window.location.href.split('/')[3];
+	if (dysk =='C:') 	onDeviceReady();
+	else				document.addEventListener("deviceready", onDeviceReady, false);
 		//try {if (device.uuid) {console.log(device.uuid);}}
 		//catch(err) {onDeviceReady();}
 		
-	}
+}
 
 
 </script>
@@ -212,24 +213,20 @@ window.addEventListener("orientationchange",updateScreen, false);
 	<div id="infosy">
 		<span id="radio_nr"></span>
 		<span id="title"></span>
+		<span id="volume_set" style="color:red;"></span>
 		<span id="volume_info"></span>
 		<span id="info"></span>
 	</div>
 
 	<div>
-		<input id="VolumeSlider" class="tlo" type="range" min="0" max="100" step="1" defaultValue="85" onChange="ustawVolume(this)" />
+		<input id="VolumeSlider" class="tlo" type="range" min="30" max="90" step="1" defaultValue="66" onChange="ustawVolume(this)" />
 	</div>
 </div>
 
 <div id="klawisze"></div>
 
 <div id="klawiszeplus">
-	<button onclick="mpc('stop')">Stop</button>
-	<button onclick="mpc('play')">Play</button>
-	<button id="btn100" data-id="100" class="btn" onClick='rp("bash/reboot",1)'>reboot</button>
-	<button id="btn101" data-id="101" class="btn" onClick='rp("bash/poweroff",1)'>poweroff</button>
-	<button id="btn102" data-id="102" class="btn" onClick='rp("bash/zegar")'>Zegar</button>
-	<button id="btn103" data-id="103" class="btn" onClick='rp("bash/alarm")'>Alarm</button>
+<button onclick="mpc('stop')">Stop</button><button onclick="mpc('play')">Play</button><button id="btn100" data-id="100" class="btn" onClick='rp("bash/reboot",1)'>reboot</button><button id="btn101" data-id="101" class="btn" onClick='rp("bash/poweroff",1)'>poweroff</button><button id="btn102" data-id="102" class="btn" onClick='rp("bash/zegar")'>Zegar</button><button id="btn103" data-id="103" class="btn" onClick='rp("bash/alarm")'>Alarm</button>
 </div>
 
 <div id="alarm_div">
@@ -243,9 +240,12 @@ window.addEventListener("orientationchange",updateScreen, false);
 </div>
 
 
-
-<div id="infoIP"></div>
+<div>
+	<span id="infoIP"></span>
+	<span id="zegar"></span>
+</div>
 <div id="nono"></div>
+<div id="nonono"></div>
 
 </body>
 </html>
