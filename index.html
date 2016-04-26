@@ -191,11 +191,15 @@ window.addEventListener("orientationchange",updateScreen, false);
 
 
 function onLoad() {
-	//console.log(window.location.href.split('/'));
+	/*
+	console.log(window.location.href.split('/'));
 	$('nonono').innerHTML=window.location.href;
 	var dysk = window.location.href.split('/')[3];
 	if (dysk =='C:') 	onDeviceReady();
 	else				document.addEventListener("deviceready", onDeviceReady, false);
+	*/
+	document.addEventListener("deviceready", onDeviceReady, false);
+	
 		//try {if (device.uuid) {console.log(device.uuid);}}
 		//catch(err) {onDeviceReady();}
 		
