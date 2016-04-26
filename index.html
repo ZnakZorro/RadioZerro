@@ -168,10 +168,11 @@ function odpalAlarm(){
 
 // DOM READY ***  DOM READY ***  DOM READY ***  DOM READY *** 
 
-var DeviceReady=null
+//var DeviceReady=null
 function onDeviceReady() {
-	if (DeviceReady) return;
-	DeviceReady = true;
+$('klawisze').innerHTML='';
+	//if (DeviceReady) return;
+	//DeviceReady = true;
 	// find radio url
 	testIP();
 	
@@ -191,16 +192,16 @@ function onDeviceReady() {
 	updateScreen();
 }
 
-document.addEventListener('DOMContentLoaded', function() {
-onDeviceReady();
-});
+//document.addEventListener('DOMContentLoaded', function() {
+//onDeviceReady();
+//});
 
 // DOM READY ***  DOM READY ***  DOM READY ***  DOM READY *** 
 window.addEventListener("resize", updateScreen, false);
 window.addEventListener("orientationchange",updateScreen, false);
 
 
-function onLoad() {
+//function onLoad() {
 	/*
 	console.log(window.location.href.split('/'));
 	$('nonono').innerHTML=window.location.href;
@@ -208,14 +209,25 @@ function onLoad() {
 	if (dysk =='C:') 	onDeviceReady();
 	else				document.addEventListener("deviceready", onDeviceReady, false);
 	*/
-	document.addEventListener("deviceready", onDeviceReady, false);
+	//document.addEventListener("deviceready", onDeviceReady, false);
 	
 		//try {if (device.uuid) {console.log(device.uuid);}}
 		//catch(err) {onDeviceReady();}
 		
-}
+//}
+
+   function onLoad() {
+        document.addEventListener("deviceready", onDeviceReady, false);
+
+		try {if (device.uuid) {console.log(device.uuid);}	}
+		catch(err) {onDeviceReady();}
+		
+	}
 
 
+	
+function exitFromApp(){navigator.app.exitApp();}	
+	
 </script>
 
 
@@ -242,13 +254,6 @@ function onLoad() {
 <div id="klawiszeplus">
 <button onclick="mpc('stop')">Stop</button><button onclick="mpc('play')">Play</button><button id="btn100" data-id="100" class="btn" onClick='rp("bash/reboot",1)'>reboot</button><button id="btn101" data-id="101" class="btn" onClick='rp("bash/poweroff",1)'>poweroff</button><button id="btn102" data-id="102" class="btn" onClick='rp("bash/zegar")'>Zegar</button><button id="btn103" data-id="103" class="btn" onClick='rp("bash/alarm")'>Alarm</button>
 </div>
-<div id="serwery">
-<button onclick="testIP()">() Refresh</button>
-<button onclick="radioUrl=servers[0]; $('infoIP').innerHTML=radioUrl;return;">Server WI</button>
-<button onclick="radioUrl=servers[1]; $('infoIP').innerHTML=radioUrl;return;">Server DOM</button>
-	
-
-</div>
 
 <div id="alarm_div">
 	<div>
@@ -267,6 +272,16 @@ function onLoad() {
 </div>
 <div id="nono"></div>
 <div id="nonono"></div>
+
+<div id="serwery">
+<button onclick="onDeviceReady()">() Refresh</button>
+<button onclick="testIP()">testIP</button>
+<button onclick="radioUrl=servers[0]; $('infoIP').innerHTML=radioUrl;return;">Server WI</button>
+<button onclick="radioUrl=servers[1]; $('infoIP').innerHTML=radioUrl;return;">Server DOM</button>
+</div>
+
+<button type="submit" onclick="exitFromApp()" value="exit"/>EXIT</button> 
+<input type="submit" onclick="exitFromApp()" value="exit"/>
 
 </body>
 </html>
