@@ -19,22 +19,23 @@ var stations=[{"title":"RMF Classic","stream":"http://31.192.216.5:8000/rmf_clas
 function $(id){return document.getElementById(id) ? document.getElementById(id) : document.getElementById('nono');}
 
 function testIP(){
+console.log('testIP()');
 	radioUrl=servers[0];
 	$('infoIP').innerHTML='-----';
 	for (var s in servers){
 		fetch(servers[s]+'info').then(function(response) {
-			//console.log(response);
+			console.log('27 '+response.url);
 			return response.url;
 		}).then(function(url) {
-			//console.log(j);
+			console.log('30 '+JSON.stringify(url));
 			if(url){
 				radioUrl=url.replace('info','');
-				//console.log(radioUrl);
+				console.log('33 '+radioUrl);
 				$('infoIP').innerHTML=radioUrl;	
 				setTimeout(function(){ax(radioUrl+'info/');},3000)
 				setInterval(function(){ax(radioUrl+'info/');},30000);
 			}
-		}).catch(function(err) {});
+		}).catch(function(err) {console.log(err)});
 	}	
 }
 
@@ -57,7 +58,7 @@ function ax(u){
 	fetch(u,{cache:"no-cache"}).then(function(response) {
 		return response.json();
 	}).then(function(j) {
-		//console.log(j);
+		//console.log(JSON.stringify(j));
 		if (j.length) {stations=j; return;}
 		$('nono').innerHTML=JSON.stringify(j);
 		//console.log(JSON.stringify(j))
@@ -170,6 +171,7 @@ function odpalAlarm(){
 
 //var DeviceReady=null
 function onDeviceReady() {
+console.log('onDeviceReady()');
 $('klawisze').innerHTML='';
 	//if (DeviceReady) return;
 	//DeviceReady = true;
@@ -179,12 +181,13 @@ $('klawisze').innerHTML='';
 	// load stations 
 	if (stations==null){
 		fetch(url_radios,{cache:"no-cache"}).then(function(response) {return response.json();}).then(function(j) {
-			//console.log(j); //stream,title
+			console.log(JSON.stringify(j));
 			stations=j;
 			var StationButtons= new Klawisze('klawisze',setStation,'btn');
 			for (var s in stations){StationButtons.wstaw(stations[s]['title'],parseInt(s)+1);}
 		}).catch(function(err) {console.log(err);});	
 	} else {
+			console.log('instal button');
 			var StationButtons= new Klawisze('klawisze',setStation,'btn');
 			for (var s in stations){StationButtons.wstaw(stations[s]['title'],parseInt(s)+1);}	
 	}
@@ -217,6 +220,7 @@ window.addEventListener("orientationchange",updateScreen, false);
 //}
 
    function onLoad() {
+   console.log('onload');
         document.addEventListener("deviceready", onDeviceReady, false);
 
 		try {if (device.uuid) {console.log(device.uuid);}	}
@@ -227,11 +231,26 @@ window.addEventListener("orientationchange",updateScreen, false);
 
 	
 function exitFromApp(){navigator.app.exitApp();}	
-	
+
+
+
+
+
+//console.log = function(message) {$('log').innerHTML=('<p>' + JSON.stringify(message) + '</p>');};
+//
+/*	
+console.log = (function (old_function, div_log) { 
+    return function (text) {
+        old_function(text);
+        div_log.value += text;
+    };
+} (console.log.bind(console), document.getElementById("log")));
+*/
 </script>
 
 
 </head>
+<div id="log"></div>
 
 <body onload="onLoad();" >
 <div id="natopie">
@@ -282,6 +301,26 @@ function exitFromApp(){navigator.app.exitApp();}
 
 <button type="submit" onclick="exitFromApp()" value="exit"/>EXIT</button> 
 <input type="submit" onclick="exitFromApp()" value="exit"/>
+
+
+
+<script>
+
+(function () {
+    var old = console.log;
+    var logger = document.getElementById('log');
+    console.log = function (message) {
+        if (typeof message == 'object') {
+            logger.innerHTML += (JSON && JSON.stringify ? JSON.stringify(message) : message) + '<br />';
+        } else {
+            logger.innerHTML += message + '<br />';
+        }
+    }
+})();
+console.error = console.debug = console.info =  console.log;
+</script>
+
+
 
 </body>
 </html>
