@@ -18,16 +18,24 @@ var stations=[{"title":"RMF Classic","stream":"http://31.192.216.5:8000/rmf_clas
 
 function $(id){return document.getElementById(id) ? document.getElementById(id) : document.getElementById('nono');}
 
-function testIP(u,url){
-	fetch(u,{mode: 'no-cors',cache: 'default'}).then(function(response) {
-		if(response) {
-			radioUrl=url;	
-			$('infoIP').innerHTML=radioUrl;	
-			setTimeout(function(){ax(radioUrl+'info/');},3000)
-			setInterval(function(){ax(radioUrl+'info/');},30000);
-		}
-		return response.text();
-	}).then(function(j) {}).catch(function(err) {});
+function testIP(){
+	radioUrl=servers[0];
+	$('infoIP').innerHTML='-----';
+	for (var s in servers){
+		fetch(servers[s]+'info').then(function(response) {
+			//console.log(response);
+			return response.url;
+		}).then(function(url) {
+			//console.log(j);
+			if(url){
+				radioUrl=url.replace('info','');
+				//console.log(radioUrl);
+				$('infoIP').innerHTML=radioUrl;	
+				setTimeout(function(){ax(radioUrl+'info/');},3000)
+				setInterval(function(){ax(radioUrl+'info/');},30000);
+			}
+		}).catch(function(err) {});
+	}	
 }
 
 function ustawVolume(ten){
@@ -160,10 +168,12 @@ function odpalAlarm(){
 
 // DOM READY ***  DOM READY ***  DOM READY ***  DOM READY *** 
 
-
+var DeviceReady=null
 function onDeviceReady() {
+	if (DeviceReady) return;
+	DeviceReady = true;
 	// find radio url
-	for (var s in servers){testIP(servers[s]+'info',servers[s]);}
+	testIP();
 	
 	// load stations 
 	if (stations==null){
@@ -181,9 +191,9 @@ function onDeviceReady() {
 	updateScreen();
 }
 
-//document.addEventListener('DOMContentLoaded', function() {
-//onDeviceReady();
-//});
+document.addEventListener('DOMContentLoaded', function() {
+onDeviceReady();
+});
 
 // DOM READY ***  DOM READY ***  DOM READY ***  DOM READY *** 
 window.addEventListener("resize", updateScreen, false);
@@ -231,6 +241,13 @@ function onLoad() {
 
 <div id="klawiszeplus">
 <button onclick="mpc('stop')">Stop</button><button onclick="mpc('play')">Play</button><button id="btn100" data-id="100" class="btn" onClick='rp("bash/reboot",1)'>reboot</button><button id="btn101" data-id="101" class="btn" onClick='rp("bash/poweroff",1)'>poweroff</button><button id="btn102" data-id="102" class="btn" onClick='rp("bash/zegar")'>Zegar</button><button id="btn103" data-id="103" class="btn" onClick='rp("bash/alarm")'>Alarm</button>
+</div>
+<div id="serwery">
+<button onclick="testIP()">() Refresh</button>
+<button onclick="radioUrl=servers[0]; $('infoIP').innerHTML=radioUrl;return;">Server WI</button>
+<button onclick="radioUrl=servers[1]; $('infoIP').innerHTML=radioUrl;return;">Server DOM</button>
+	
+
 </div>
 
 <div id="alarm_div">
